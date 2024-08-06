@@ -1,5 +1,7 @@
 package study.community.post.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +32,12 @@ public class PostService {
         return new PostResponseDto(findPost);
     }
 
+    public List<PostResponseDto> findAll() {
+        return postRepository.findAll().stream()
+            .map(PostResponseDto::new)
+            .toList();
+    }
+
     @Transactional
     public void update(Long id, PostUpdateDto postUpdateDto) {
         Post findPost = postRepository.findById(id).orElseThrow(
@@ -38,5 +46,9 @@ public class PostService {
         findPost.update(postUpdateDto.getTitle(), postUpdateDto.getContent());
     }
 
-
+    public List<PostResponseDto> search(String search) {
+        return postRepository.search('%' + search + '%').stream()
+            .map(PostResponseDto::new)
+            .toList();
+    }
 }

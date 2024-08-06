@@ -1,11 +1,14 @@
 package study.community.post.controller;
 
+import java.util.List;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -46,5 +49,21 @@ public class PostController {
         postService.update(id, postUpdateDto);
 
         return new ResponseApi<>(true, "수정 성공", null);
+    }
+
+    @GetMapping
+    public ResponseApi<List<PostResponseDto>> findPosts() {
+        log.info("글 전체 조회");
+        List<PostResponseDto> posts = postService.findAll();
+
+        return new ResponseApi<>(true, "글 전체 조회 성공", posts);
+    }
+
+    @GetMapping("/search")
+    public ResponseApi<List<PostResponseDto>> searchPosts(@RequestParam(required = false) String search) {
+        log.info("글 검색");
+        List<PostResponseDto> posts = postService.search(search);
+
+        return new ResponseApi<>(true, "글 검색 성공", posts);
     }
 }
